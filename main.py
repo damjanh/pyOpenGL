@@ -69,29 +69,12 @@ class App:
             self.clock.tick(60)
 
     def update(self):
-        model_transform = pyrr.matrix44.create_identity(dtype=np.float32)
-        model_transform = pyrr.matrix44.multiply(
-            m1=model_transform,
-            m2=pyrr.matrix44.create_from_eulers(
-                eulers=np.radians(self.cube.eulers),
-                dtype=np.float32
-            )
-        )
-        model_transform = pyrr.matrix44.multiply(
-            m1=model_transform,
-            m2=pyrr.matrix44.create_from_translation(
-                vec=self.cube.position,
-                dtype=np.float32
-            )
-        )
-        glUniformMatrix4fv(self.model_matrix_location, 1, GL_FALSE, model_transform)
-        self.cube.update()
+        self.cube.update(self.model_matrix_location)
 
     def render(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glUseProgram(self.shader)
 
-        self.cube.update()
         self.cube.render()
 
     def quit(self):
