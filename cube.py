@@ -1,5 +1,5 @@
 import numpy as np
-from cube_mesh import CubeMesh
+from mesh import Mesh
 from material import Material
 import pyrr
 from OpenGL.GL import *
@@ -10,14 +10,15 @@ class Cube:
         self.position = np.array(position, dtype=np.float32)
         self.eulers = np.array(eulers, dtype=np.float32)
 
-        self.mesh = CubeMesh()
+        self.mesh = Mesh('models/cube.obj')
         self.texture = Material('gfx/wood.jpeg')
 
-    def update(self, model_matrix_location):
-        self.eulers[2] += 0.2
-        if self.eulers[2] > 360:
-            self.eulers[2] -= 350
+    def update(self, rate):
+        self.eulers[1] += 0.2 * rate
+        if self.eulers[1] > 360:
+            self.eulers[1] -= 360
 
+    def render(self, model_matrix_location):
         model_transform = pyrr.matrix44.create_identity(dtype=np.float32)
         model_transform = pyrr.matrix44.multiply(
             m1=model_transform,
@@ -34,9 +35,7 @@ class Cube:
             )
         )
         glUniformMatrix4fv(model_matrix_location, 1, GL_FALSE, model_transform)
-
-    def render(self):
-        self.texture.use()
+        self.texture.enable()
         self.mesh.render()
 
     def destroy(self):
