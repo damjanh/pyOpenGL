@@ -55,6 +55,21 @@ class App:
 
         self.model_matrix_location = glGetUniformLocation(self.shader, 'model')
         self.view_matrix_location = glGetUniformLocation(self.shader, 'view')
+        self.light_location = {
+            'position': [
+                glGetUniformLocation(self.shader, f'Lights[{i}].position')
+                for i in range(8)
+            ],
+            'color': [
+                glGetUniformLocation(self.shader, f'Lights[{i}].color')
+                for i in range(8)
+            ],
+            'strength': [
+                glGetUniformLocation(self.shader, f'Lights[{i}].strength')
+                for i in range(8)
+            ]
+        }
+        self.camera_pos_location = glGetUniformLocation(self.shader, 'cameraPos')
 
         self.last_time = glfw.get_time()
         self.current_time = 0
@@ -152,7 +167,12 @@ class App:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glUseProgram(self.shader)
 
-        self.scene.render(self.model_matrix_location, self.view_matrix_location)
+        self.scene.render(
+            self.model_matrix_location,
+            self.view_matrix_location,
+            self.light_location,
+            self.camera_pos_location
+        )
 
     def quit(self):
         self.scene.destroy()
