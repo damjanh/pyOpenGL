@@ -4,6 +4,7 @@ import numpy as np
 import pyrr
 from OpenGL.GL import *
 from light import Light
+from billboard import Billboard
 
 
 class Scene:
@@ -74,6 +75,11 @@ class Scene:
         for obj in self.objects:
             obj.render(model_matrix_location)
 
+        for light in self.lights:
+            light.billboard.render(self.player.pos, model_matrix_location)
+
     def destroy(self):
         for obj in self.objects:
             obj.destroy()
+        for light in self.lights:
+            light.billboard.destroy()

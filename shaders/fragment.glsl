@@ -20,15 +20,15 @@ vec3 calculatePointLight(PointLight light, vec3 fragmentPos, vec3 fragmentNormal
 
 void main()
 {
-    vec3 temp = vec3(0.0);
+    vec4 baseTexture = texture(imageTexture, fragmentTexCoord);
 
      // ambient
-    temp += 0.2 * texture(imageTexture, fragmentTexCoord).rgb;
+    vec3 temp = 0.2 * baseTexture.rgb;
 
     for (int i = 0; i < 8; i++) {
         temp += calculatePointLight(Lights[i], fragmentPos, fragmentNormal);
     }
-    color = vec4(temp, 1.0);
+    color = vec4(temp, baseTexture.a);
 }
 
 vec3 calculatePointLight(PointLight light, vec3 fragmentPos, vec3 fragmentNormal){
